@@ -13,11 +13,11 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class FragmentsViewModel(private val repository: Repository): ViewModel() {
+class FragmentsViewModel(private val repository: Repository) : ViewModel() {
     private val location = NowLocation.getInstance()
 
     var weatherData = Weather("", "", "", "")
-    var dustData  = Dust("", "", "", "", "", "", "")
+    var dustData = Dust("", "", "", "", "", "", "")
 
     private var _dataLoaded = MutableLiveData<Boolean>().apply {
         this.value = false
@@ -32,27 +32,27 @@ class FragmentsViewModel(private val repository: Repository): ViewModel() {
 
     val dataLoaded: LiveData<Boolean>
         get() = _dataLoaded
-    val dataFailed : LiveData<Boolean>
+    val dataFailed: LiveData<Boolean>
         get() = _dataFailed
     val locationUpdated = repository.dataLoaded
     val dataFailThrow
         get() = _dataFailThrow
 
-    fun updateLocation(locationManager: LocationManager){
+    fun updateLocation(locationManager: LocationManager) {
         _dataLoaded.value = false
         repository.updateLocation(locationManager)
     }
 
-    fun updateWeather(){
+    fun updateWeather() {
         weatherLoaded = false
         repository.updateWeather(location).enqueue(
-            object: Callback<Weather>{
+            object : Callback<Weather> {
                 override fun onResponse(call: Call<Weather>, response: Response<Weather>) {
                     val data = response.body()
-                    if(data != null){
+                    if (data != null) {
                         weatherData = data
                         weatherLoaded = true
-                        if(dustLoaded){
+                        if (dustLoaded) {
                             _dataLoaded.value = true
                         }
                     }
@@ -65,16 +65,16 @@ class FragmentsViewModel(private val repository: Repository): ViewModel() {
         )
     }
 
-    fun updateDust(){
+    fun updateDust() {
         dustLoaded = false
         repository.updateDust(location).enqueue(
-            object: Callback<Dust>{
+            object : Callback<Dust> {
                 override fun onResponse(call: Call<Dust>, response: Response<Dust>) {
                     val data = response.body()
-                    if(data != null){
+                    if (data != null) {
                         dustData = data
                         dustLoaded = true
-                        if(weatherLoaded){
+                        if (weatherLoaded) {
                             _dataLoaded.value = true
                         }
                     }
@@ -89,11 +89,11 @@ class FragmentsViewModel(private val repository: Repository): ViewModel() {
     }
 }
 
-class FragmentsViewModelFactory(private val repository: Repository): ViewModelProvider.Factory{
+class FragmentsViewModelFactory(private val repository: Repository) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if(modelClass.isAssignableFrom(FragmentsViewModel::class.java))
+        if (modelClass.isAssignableFrom(FragmentsViewModel::class.java))
             return FragmentsViewModel(repository) as T
-        else{
+        else {
             throw IllegalAccessException("잘못된 뷰모델 클래스 입니다.")
         }
     }

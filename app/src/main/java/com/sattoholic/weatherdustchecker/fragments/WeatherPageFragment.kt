@@ -24,8 +24,12 @@ class WeatherPageFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_weather_page, container, false)
-        viewModel = ViewModelProvider(requireActivity(), FragmentsViewModelFactory(repository!!)).get(FragmentsViewModel::class.java)
+        binding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_weather_page, container, false)
+        viewModel =
+            ViewModelProvider(requireActivity(), FragmentsViewModelFactory(repository!!)).get(
+                FragmentsViewModel::class.java
+            )
         binding.viewModel = viewModel
         return binding.root
     }
@@ -33,35 +37,35 @@ class WeatherPageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.dataLoaded.observe(requireActivity()){
-            if(it){
+        viewModel.dataLoaded.observe(requireActivity()) {
+            if (it) {
                 binding.weatherStatusText.text =
-                    when{
-                        viewModel.weatherData.id.startsWith("2") ->{
+                    when {
+                        viewModel.weatherData.id.startsWith("2") -> {
                             binding.weatherIcon.setImageResource(R.drawable.ic_flash)
                             "천둥, 번개"
                         }
-                        viewModel.weatherData.id.startsWith("3") ->{
+                        viewModel.weatherData.id.startsWith("3") -> {
                             binding.weatherIcon.setImageResource(R.drawable.ic_rain)
                             "이슬비"
                         }
-                        viewModel.weatherData.id.startsWith("5") ->{
+                        viewModel.weatherData.id.startsWith("5") -> {
                             binding.weatherIcon.setImageResource(R.drawable.ic_rain)
                             "비"
                         }
-                        viewModel.weatherData.id.startsWith("6") ->{
+                        viewModel.weatherData.id.startsWith("6") -> {
                             binding.weatherIcon.setImageResource(R.drawable.ic_snow)
                             "눈"
                         }
-                        viewModel.weatherData.id.startsWith("7") ->{
+                        viewModel.weatherData.id.startsWith("7") -> {
                             binding.weatherIcon.setImageResource(R.drawable.ic_cloud)
                             "흐림"
                         }
-                        viewModel.weatherData.id.equals("800") ->{
+                        viewModel.weatherData.id.equals("800") -> {
                             binding.weatherIcon.setImageResource(R.drawable.ic_sun)
                             "맑음"
                         }
-                        viewModel.weatherData.id.startsWith("8") ->{
+                        viewModel.weatherData.id.startsWith("8") -> {
                             binding.weatherIcon.setImageResource(R.drawable.ic_cloudy)
                             "구름 낌"
                         }
@@ -71,18 +75,22 @@ class WeatherPageFragment : Fragment() {
                 binding.invalidateAll()
             }
         }
-        viewModel.dataFailed.observe(requireActivity()){
-            if(it){
-                Toast.makeText(activity, "에러 발생 : ${viewModel.dataFailThrow.message}", Toast.LENGTH_SHORT).show()
+        viewModel.dataFailed.observe(requireActivity()) {
+            if (it) {
+                Toast.makeText(
+                    activity,
+                    "에러 발생 : ${viewModel.dataFailThrow.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
 
-    companion object{
+    companion object {
         private var INSTANCE: WeatherPageFragment? = null
 
-        fun getInstance(): WeatherPageFragment{
-            if(INSTANCE == null){
+        fun getInstance(): WeatherPageFragment {
+            if (INSTANCE == null) {
                 this.INSTANCE = WeatherPageFragment()
             }
             return INSTANCE!!

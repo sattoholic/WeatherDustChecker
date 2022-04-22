@@ -6,7 +6,7 @@ import com.google.gson.JsonElement
 import com.sattoholic.weatherdustchecker.models.Weather
 import java.lang.reflect.Type
 
-class WeatherDeserializer: JsonDeserializer<Weather> {
+class WeatherDeserializer : JsonDeserializer<Weather> {
     override fun deserialize(
         json: JsonElement?,
         typeOfT: Type?,

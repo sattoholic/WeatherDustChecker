@@ -6,9 +6,9 @@ import com.google.gson.JsonElement
 import com.sattoholic.weatherdustchecker.models.Dust
 import java.lang.reflect.Type
 
-class DustDeserializer: JsonDeserializer<Dust> {
+class DustDeserializer : JsonDeserializer<Dust> {
     private val checkCategory = { i: Int? ->
-        when(i){
+        when (i) {
             in 0..100 -> "좋음"
             in 101..200 -> "보통"
             in 201..300 -> "나쁨"
@@ -36,6 +36,14 @@ class DustDeserializer: JsonDeserializer<Dust> {
         val no2Value = no2Node?.get("v")?.asString
         val o3Value = o3Node?.get("v")?.asString
 
-        return Dust(pm10Value!!.toString(), pm25Value!!.toString(), checkCategory(pm10Value), checkCategory(pm25Value), co2Value!!, o3Value!!, no2Value!!)
+        return Dust(
+            pm10Value!!.toString(),
+            pm25Value!!.toString(),
+            checkCategory(pm10Value),
+            checkCategory(pm25Value),
+            co2Value!!,
+            o3Value!!,
+            no2Value!!
+        )
     }
 }

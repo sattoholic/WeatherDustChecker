@@ -15,7 +15,7 @@ import com.sattoholic.weatherdustchecker.viewmodel.FragmentsViewModel
 import com.sattoholic.weatherdustchecker.viewmodel.FragmentsViewModelFactory
 
 
-class DustPageFragment() : Fragment() {
+class DustPageFragment : Fragment() {
     lateinit var binding: FragmentDustPageBinding
     lateinit var viewModel: FragmentsViewModel
 
@@ -26,7 +26,10 @@ class DustPageFragment() : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_dust_page, container, false)
-        viewModel = ViewModelProvider(requireActivity(), FragmentsViewModelFactory(repository!!)).get(FragmentsViewModel::class.java)
+        viewModel =
+            ViewModelProvider(requireActivity(), FragmentsViewModelFactory(repository!!)).get(
+                FragmentsViewModel::class.java
+            )
         binding.viewModel = viewModel
         return binding.root
     }
@@ -34,10 +37,10 @@ class DustPageFragment() : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.dataLoaded.observe(requireActivity()){
-            if(it){
+        viewModel.dataLoaded.observe(requireActivity()) {
+            if (it) {
                 binding.dustStatusIcon.setImageResource(
-                    when(viewModel.dustData.pm25Status){
+                    when (viewModel.dustData.pm25Status) {
                         "좋음" -> R.drawable.ic_good
                         "보통" -> R.drawable.ic_normal
                         "나쁨" -> R.drawable.ic_bad
@@ -47,17 +50,22 @@ class DustPageFragment() : Fragment() {
                 binding.invalidateAll()
             }
         }
-        viewModel.dataFailed.observe(requireActivity()){
-            if(it){
-                Toast.makeText(activity, "에러 발생 : ${viewModel.dataFailThrow.message}", Toast.LENGTH_SHORT).show()
+        viewModel.dataFailed.observe(requireActivity()) {
+            if (it) {
+                Toast.makeText(
+                    activity,
+                    "에러 발생 : ${viewModel.dataFailThrow.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
-    companion object{
+
+    companion object {
         private var INSTANCE: DustPageFragment? = null
 
-        fun getInstance(): DustPageFragment{
-            if(INSTANCE == null){
+        fun getInstance(): DustPageFragment {
+            if (INSTANCE == null) {
                 INSTANCE = DustPageFragment()
             }
             return INSTANCE!!

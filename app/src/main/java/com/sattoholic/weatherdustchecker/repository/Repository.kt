@@ -32,41 +32,58 @@ class Repository(API_KEY: String, TOKEN: String) {
     val dataLoaded: LiveData<Boolean>
         get() = _dataLoaded
 
-    private val weatherRetrofit  = Retrofit.Builder()
+    private val weatherRetrofit = Retrofit.Builder()
         .baseUrl("http://api.openweathermap.org")
-        .addConverterFactory(GsonConverterFactory.create(
-            GsonBuilder().registerTypeAdapter(
-                Weather::class.java,
-                WeatherDeserializer()
-            ).create()
-        )
+        .addConverterFactory(
+            GsonConverterFactory.create(
+                GsonBuilder().registerTypeAdapter(
+                    Weather::class.java,
+                    WeatherDeserializer()
+                ).create()
+            )
         ).build()
 
     private val weatherAPIService = weatherRetrofit.create(WeatherAPIService::class.java)
 
-    private val dustRetrofit = Retrofit.Builder().baseUrl("http://api.waqi.info").addConverterFactory(GsonConverterFactory.create(
-        GsonBuilder().registerTypeAdapter(
-            Dust::class.java,
-            DustDeserializer()
-        ).create()
-    )).build()
+    private val dustRetrofit =
+        Retrofit.Builder().baseUrl("http://api.waqi.info").addConverterFactory(
+            GsonConverterFactory.create(
+                GsonBuilder().registerTypeAdapter(
+                    Dust::class.java,
+                    DustDeserializer()
+                ).create()
+            )
+        ).build()
 
     private val dustAPIService = dustRetrofit.create(DustAPIService::class.java)
 
     @Suppress("MissingPermission")
-    fun updateLocation(locationManager: LocationManager){
+    fun updateLocation(locationManager: LocationManager) {
         _dataLoaded.value = false
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0f, object: LocationListener{
-            override fun onLocationChanged(p0: Location) {
-                location.setLocation(p0.latitude, p0.longitude)
-                _dataLoaded.value = true
-                locationManager.removeUpdates(this)
-            }
-        })
+        locationManager.requestLocationUpdates(
+            LocationManager.GPS_PROVIDER,
+            0,
+            0f,
+            object : LocationListener {
+                override fun onLocationChanged(p0: Location) {
+                    location.setLocation(p0.latitude, p0.longitude)
+                    _dataLoaded.value = true
+                    locationManager.removeUpdates(this)
+                }
+            })
     }
 
-    fun updateWeather(location: NowLocation): Call<Weather> = this.weatherAPIService.getWeatherStatusInfo(WEATHER_APP_ID, location.getLatitude(), location.getLongitude())
+    fun updateWeather(location: NowLocation): Call<Weather> =
+        this.weatherAPIService.getWeatherStatusInfo(
+            WEATHER_APP_ID,
+            location.getLatitude(),
+            location.getLongitude()
+        )
 
-    fun updateDust(location: NowLocation): Call<Dust> = this.dustAPIService.getDustStatusInfo(location.getLatitude(), location.getLongitude(), DUST_APP_TOKEN)
+    fun updateDust(location: NowLocation): Call<Dust> = this.dustAPIService.getDustStatusInfo(
+        location.getLatitude(),
+        location.getLongitude(),
+        DUST_APP_TOKEN
+    )
 
 }
